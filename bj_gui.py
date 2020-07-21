@@ -214,7 +214,10 @@ def hit():
     if bj.cardSum(bj.player_hand) > 21:
         hit_button.configure(state=DISABLED)
         stand_button.configure(state=DISABLED)
-        showDealerCards()
+        root.dealer_card_1 = ImageTk.PhotoImage(Image.open(getCard(
+                                                    bj.dealer_hand, 1)))
+        dealer_hand_label_1.configure(image=root.dealer_card_1)
+        bj.endRound()
         endGame()
     player_title.configure(text='Your Hand Total:' +
                            f'{bj.cardSum(bj.player_hand)}')

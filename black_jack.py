@@ -8,7 +8,7 @@ class BlackJack:
     def __init__(self):
         """Initialize."""
         self.deck = Deck()
-        #self.deck.shuffle()
+        self.deck.shuffle()
         self.player_hand = []
         self.dealer_hand = []
         self.player_bet = 0
@@ -19,7 +19,7 @@ class BlackJack:
         """Check card amount in deck."""
         if len(self.deck.cards) < 20:
             self.deck.build()
-            #self.deck.shuffle()
+            self.deck.shuffle()
 
     def roundBet(self):
         """Get bet for current round."""
@@ -103,11 +103,16 @@ class BlackJack:
 
     def endRound(self):
         """End round."""
-        if (self.cardSum(self.dealer_hand) > 21 and
-           self.cardSum(self.player_hand) <= 21):
-            self.player_money += self.player_bet
-        elif (self.cardSum(self.dealer_hand) <= 21 and
-              self.cardSum(self.player_hand) > self.cardSum(self.dealer_hand)):
-            self.player_money += self.player_bet
+        if (self.cardSum(self.player_hand) <= 21) and (self.cardSum(self.dealer_hand) 
+            > 21):
+           self.player_money += self.player_bet
+        elif (self.cardSum(self.player_hand) > self.cardSum(
+              self.dealer_hand)) and (self.cardSum(self.player_hand) <= 21):
+             self.player_money += self.player_bet
+        elif self.cardSum(self.player_hand) == self.cardSum(self.dealer_hand):
+            pass
         else:
             self.player_money -= self.player_bet
+
+
+
