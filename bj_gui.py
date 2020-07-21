@@ -107,16 +107,19 @@ def playerBetGet():
         except ValueError:
             player_entry_instruction.configure(text='Enter a whole number')
         if bet_get < bj.player_money and bet_get > 0:
-            bj.player_bet = bet_get
-            current_bet.configure(text=f'Current bet: ${bj.player_bet}')
-            break
+                bj.player_bet = bet_get
+                current_bet.configure(text=f'Current bet: ${bj.player_bet}')
+                break
         else:
             player_entry_instruction.configure(text='Enter a # > 0 and' +
                                                f'# < {bj.player_money}')
+            player_entry.delete(0, END)
+            raise Exception('user input amount not within parameters')
+                
     player_entry.delete(0, END)
-    rounds_played = 0
-    rounds_played += 1
-    player_entry_instruction.configure(text=f'Round of play:{rounds_played}')
+    
+    bj.rounds_played += 1
+    player_entry_instruction.configure(text=f'Round of play:{bj.rounds_played}')
     player_entry.configure(state=DISABLED)
     startGame()
 
@@ -146,11 +149,22 @@ def startGame():
     player_hand_label_0.configure(image=root.player_card_0)
     player_hand_label_1.configure(image=root.player_card_1)
     if bj.cardSum(bj.player_hand) == 21:
-        endGame()
-    hit_button.configure(state=NORMAL)
-    stand_button.configure(state=NORMAL)
-    player_title.configure(text='Your Hand Total:' +
-                                f'{bj.cardSum(bj.player_hand)}')
+        special_case_button.configure(state=NORMAL, text='Continue',
+                                      command=natural21)
+        player_entry_instruction.configure(text='You got a Natural 21!')
+    else:
+        hit_button.configure(state=NORMAL)
+        stand_button.configure(state=NORMAL)
+        player_title.configure(text='Your Hand Total:' +
+                               f'{bj.cardSum(bj.player_hand)}')
+
+
+def natural21():
+    """Set conditions if player has a natural 21."""
+    bj.endRound()
+    special_case_button.configure(state=DISABLED, text='spesh')
+    clearHands()
+    endGame()
 
 
 def hit():
@@ -259,6 +273,7 @@ def stand():
     hit_button.configure(state=DISABLED)
     stand_button.configure(state=DISABLED)
     showDealerCards()
+    bj.endRound()
     endGame()
 
 
@@ -296,7 +311,6 @@ def endGame():
     player_title.configure(text='Your Hand Total:' +
                            f'{bj.cardSum(bj.player_hand)}')
     start_button.configure(state=NORMAL, text='Continue', command=playerBetGet)
-    bj.endRound()
     total_money.configure(text=f'Total money: ${bj.player_money}')
     player_entry_instruction.configure(text='Enter a bet amount')
     player_entry.configure(state=NORMAL)
@@ -387,6 +401,7 @@ player_hand_label_1 = Label(player_frame, image=root.sm_card_blank)
 player_hand_label_1.grid(row=0, column=9)
 player_hand_label_0 = Label(player_frame, image=root.card_blank)
 player_hand_label_0.grid(row=0, column=10)
+
 
 
 root.mainloop()

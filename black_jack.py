@@ -8,17 +8,18 @@ class BlackJack:
     def __init__(self):
         """Initialize."""
         self.deck = Deck()
-        self.deck.shuffle()
+        #self.deck.shuffle()
         self.player_hand = []
         self.dealer_hand = []
         self.player_bet = 0
         self.player_money = 0
+        self.rounds_played = 0
 
     def checkDeck(self):
         """Check card amount in deck."""
         if len(self.deck.cards) < 20:
             self.deck.build()
-            self.deck.shuffle()
+            #self.deck.shuffle()
 
     def roundBet(self):
         """Get bet for current round."""
