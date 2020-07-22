@@ -1,4 +1,7 @@
 {
+    "python.autoComplete.extraPaths": [
+        "C:\\spaghetti\\cardgames",
+    ],
     "python.pythonPath": "C:\\Users\\15105\\AppData\\Local\\Programs\\Python\\Python38-32\\python.exe"
 
 }

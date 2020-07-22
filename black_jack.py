@@ -40,34 +40,13 @@ class BlackJack:
 
     def insurance(self, ins_bet):
         """Insure round per user input."""
-        self.ins_bet = ins_bet
-        while True:
-            if self.ins_bet > 0 and self.ins_bet <= (self.player_bet / 2):
-                if self.player_hand[1].rank in range(10, 14):
-                    self.ins_bet += self.ins_bet
-                    self.player_money += self.ins_bet
-                    self.player_money -= self.player_bet
+        pass
 
- #   def splitPairs(self):
- #       """Split pairs."""
-        # Need to build something that makes the second hand
-        # open in GUI window.
- #       if self.player_hand[0].rank == 14:
- #           self.split_cards_one = []
- #           self.split_cards_two = []
- #           self.split_cards_one.append(self.player_hand.pop(1))
- #           self.split_cards_two.append(self.player_hand.pop(0))
- #           self.split_cards_one.append(self.deck.drawCard())
- #           self.split_cards_two.append(self.deck.drawCard())
- #           self.endRound(self.split_cards_one)
- #           self.endRound(self.split_cards_two)
- #       else:
- #           self.split_cards = []
- #           self.split_cards.append(self.player_hand.pop(0))
- #           self.split_cards.append(self.deck.drawCard())
- #           self.player_hand.append(self.deck.drawCard())
- #           if self.natural21(self.split_cards) is True:
- #               self.player_money += self.player_bet
+    def splitPairs(self):
+        """Split pairs."""
+        self.split_hand = []
+        self.split_bet = self.player_bet
+        
 
     def playerHit(self, hand):
         """Append cards to player's hand."""
