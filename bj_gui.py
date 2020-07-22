@@ -152,11 +152,25 @@ def startGame():
         special_case_button.configure(state=NORMAL, text='Continue',
                                       command=natural21)
         player_entry_instruction.configure(text='You got a Natural 21!')
+    elif bj.dealer_hand[0].rank == 14:
+        special_case_button.configure(state=NORMAL, text='Insurance',
+                                      command=insurance)
+    elif bj.player_hand[0].rank == bj.player_hand[1].rank:
+        special_case_button.configure(state=NORMAL, text='Split Pairs',
+                                      command=splitPairs)
     else:
         hit_button.configure(state=NORMAL)
         stand_button.configure(state=NORMAL)
         player_title.configure(text='Your Hand Total:' +
                                f'{bj.cardSum(bj.player_hand)}')
+
+
+def insurance():
+    pass
+
+
+def splitPairs():
+    pass
 
 
 def natural21():
