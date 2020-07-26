@@ -52,6 +52,7 @@ class Deck:
 
     def build(self):
         """Build deck."""
+        self.cards.clear()
         for s in [1, 2, 3, 4]:
             for r in range(2, 15):
                 self.cards.append(Card(s, r))
