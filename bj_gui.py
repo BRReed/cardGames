@@ -351,17 +351,19 @@ player_entry = Entry(top_frame, state=DISABLED)
 hit_button = Button(top_frame, text='Hit', state=DISABLED,
                     command=hit)
 special_case_button = Button(top_frame, text='Spesh', state=DISABLED)
+special_case_button2 = Button(top_frame, text='Spesh2', state=DISABLED)
 stand_button = Button(top_frame, text='Stand', state=DISABLED, command=stand)
 
-total_money.grid(row=0, column=1)
-current_bet.grid(row=1, column=1)
+total_money.grid(row=0, column=1, columnspan=2)
+current_bet.grid(row=1, column=1, columnspan=2)
 start_button.grid(row=3, column=0)
-quit_button.grid(row=3, column=2)
-player_entry_instruction.grid(row=4, column=1)
-player_entry.grid(row=5, column=1)
+quit_button.grid(row=3, column=3)
+player_entry_instruction.grid(row=4, column=1, columnspan=2)
+player_entry.grid(row=5, column=1, columnspan=2)
 hit_button.grid(row=6, column=0)
 special_case_button.grid(row=6, column=1)
-stand_button.grid(row=6, column=2)
+special_case_button2.grid(row=6, column=2)
+stand_button.grid(row=6, column=3)
 
 dealer_title = Label(dealer_title_frame,
                      text=f'Dealer\'s Hand Total: {bj.cardSum(bj.dealer_hand)}'

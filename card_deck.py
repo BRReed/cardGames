@@ -12,7 +12,7 @@ class Card:
 
     def show(self):
         """Print cards in deck."""
-        for c in deck.cards:
+        for _ in deck.cards:
             print(f'{self.rank} of {self.suit}')
 
     def __repr__(self):
