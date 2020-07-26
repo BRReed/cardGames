@@ -173,7 +173,28 @@ def startGame():
 
 
 def insurance():
-    pass
+    player_entry_instuction.configure(text='Enter your insurance amount')
+    player_entry.configure(text='')
+    while True:
+        try:
+            ins_bet_get = int(player_entry.get())
+        except ValueError:
+            player_entry_instruction.configure(text='Enter a whole number') 
+        if (ins_bet_get * 2) <= bet_get and ins_bet_get > 0:
+            bj.insurance(ins_bet_get)
+            break
+        else:
+            player_entry_instruction.configure(text='Enter a # > 0 and' +
+                                               f'# < 1/2 of {bj.player_bet}')
+            player_entry.delete(0, END)
+            raise Exception('user input amount not within parameters')
+                
+    player_entry.delete(0, END)
+    
+    bj.rounds_played += 1
+    player_entry_instruction.configure(text=f'Round of play:{bj.rounds_played}')
+    player_entry.configure(state=DISABLED)
+    startGame()
 
 
 def splitPairs():
