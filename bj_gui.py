@@ -196,6 +196,9 @@ def insurance():
             raise Exception('user input amount not within parameters')
     if bj.cardSum(bj.dealer_hand) == 21:
         dealer_hand_label_1.configure(image=root.dealer_card_1)
+        hit_button.configure(state=DISABLED)
+        stand_button.configure(state=DISABLED)
+        endGame()
     special_case_button.configure(state=DISABLED, text='spesh')
     player_entry.delete(0, END)
     bj.rounds_played += 1
@@ -374,7 +377,7 @@ def endGame():
     start_button.configure(state=NORMAL, text='Continue', command=playerBetGet)
     total_money.configure(text=f'Total money: ${bj.player_money}')
     player_entry_instruction.configure(text='Enter a bet amount')
-    player_entry.configure(state=NORMAL)
+    player_entry.configure(state=NORMAL, text='')
 
 
 total_money = Label(top_frame, text=f'Total money: ${bj.player_money}')
