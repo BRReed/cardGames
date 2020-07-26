@@ -162,10 +162,13 @@ def startGame():
                                       command=insurance)
     elif (bj.player_hand[0].rank == bj.player_hand[1].rank) and (
           bj.player_hand[0].rank == 5):
-          special_case_button.configure(state=NORMAL, text='Double Down',
-                                        command=doubleDown)
+        special_case_button.configure(state=NORMAL, text='Double Down',
+                                      command=doubleDown)
+        if bj.player_hand[0].rank == bj.player_hand[1].rank:
+            special_case_button2.configure(state=NORMAL, text='Split',
+                                           command=splitPairs)
     elif bj.player_hand[0].rank == bj.player_hand[1].rank:
-        special_case_button.configure(state=NORMAL, text='Split Pairs',
+        special_case_button.configure(state=NORMAL, text='Split',
                                       command=splitPairs)
 
 
@@ -191,6 +194,8 @@ def natural21():
 
 def hit():
     """Player hit and show card."""
+    special_case_button.configure(state=DISABLED, text='spesh')
+    special_case_button2.configure(state=DISABLED, text='spesh')
     hit_amount = 0
     for _ in bj.player_hand:
         hit_amount += 1
@@ -295,6 +300,8 @@ def showDealerCards():
 
 def stand():
     """End round for player."""
+    special_case_button.configure(state=DISABLED, text='spesh')
+    special_case_button2.configure(state=DISABLED, text='spesh')
     hit_button.configure(state=DISABLED)
     stand_button.configure(state=DISABLED)
     showDealerCards()
