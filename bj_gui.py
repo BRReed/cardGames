@@ -173,15 +173,16 @@ def startGame():
 
 
 def insurance():
-    player_entry_instuction.configure(text='Enter your insurance amount')
+    player_entry_instruction.configure(text='Enter your insurance amount')
     player_entry.configure(text='')
     while True:
         try:
             ins_bet_get = int(player_entry.get())
         except ValueError:
             player_entry_instruction.configure(text='Enter a whole number') 
-        if (ins_bet_get * 2) <= bet_get and ins_bet_get > 0:
+        if (ins_bet_get * 2) <= bj.player_bet and ins_bet_get > 0:
             bj.insurance(ins_bet_get)
+
             break
         else:
             player_entry_instruction.configure(text='Enter a # > 0 and' +
