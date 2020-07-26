@@ -40,7 +40,14 @@ class BlackJack:
 
     def insurance(self, ins_bet):
         """Insure round per user input."""
-        pass
+        self.ins_bet = ins_bet
+        if self.dealer_hand[1].rank in range(10, 14):
+            self.ins_bet *= 2
+            self.player_money -= self.player_bet
+            self.player_money += self.ins_bet
+        else:
+            self.player_money -= self.ins_bet
+
 
     def splitPairs(self):
         """Split pairs."""

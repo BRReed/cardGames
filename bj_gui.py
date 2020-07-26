@@ -148,19 +148,15 @@ def startGame():
     dealer_hand_label_1.configure(image=root.sm_card_back)
     player_hand_label_0.configure(image=root.player_card_0)
     player_hand_label_1.configure(image=root.player_card_1)
-    if bj.cardSum(bj.player_hand) == 21:
-        special_case_button.configure(state=NORMAL, text='Continue',
-                                      command=natural21)
-        player_entry_instruction.configure(text='You got a Natural 21!')
-    else:
-        hit_button.configure(state=NORMAL)
-        stand_button.configure(state=NORMAL)
-        player_title.configure(text='Your Hand Total:' +
-                               f'{bj.cardSum(bj.player_hand)}')
+    hit_button.configure(state=NORMAL)
+    stand_button.configure(state=NORMAL)
+    player_title.configure(text='Your Hand Total:' +
+                           f'{bj.cardSum(bj.player_hand)}')
+    
     if bj.dealer_hand[0].rank == 14:
         special_case_button.configure(state=NORMAL, text='Insurance',
                                       command=insurance)
-    elif (bj.player_hand[0].rank == bj.player_hand[1].rank) and (
+    if (bj.player_hand[0].rank == bj.player_hand[1].rank) and (
           bj.player_hand[0].rank == 5):
         special_case_button.configure(state=NORMAL, text='Double Down',
                                       command=doubleDown)
@@ -170,11 +166,21 @@ def startGame():
     elif bj.player_hand[0].rank == bj.player_hand[1].rank:
         special_case_button.configure(state=NORMAL, text='Split',
                                       command=splitPairs)
+    elif bj.cardSum(bj.player_hand) == 21:
+        special_case_button.configure(state=NORMAL, text='Continue',
+                                      command=natural21)
+        player_entry_instruction.configure(text='You got a Natural 21!')
+        hit_button.configure(state=DISABLED)
+        stand_button.configure(state=DISABLED)
+        player_title.configure(text='Your Hand Total:' +
+                               f'{bj.cardSum(bj.player_hand)}')
+    
 
 
 def insurance():
     player_entry_instruction.configure(text='Enter your insurance amount')
-    player_entry.configure(text='')
+    player_entry.configure(state=NORMAL, text='')
+    special_case_button.configure(text='Enter')
     while True:
         try:
             ins_bet_get = int(player_entry.get())
@@ -182,20 +188,21 @@ def insurance():
             player_entry_instruction.configure(text='Enter a whole number') 
         if (ins_bet_get * 2) <= bj.player_bet and ins_bet_get > 0:
             bj.insurance(ins_bet_get)
-
             break
         else:
             player_entry_instruction.configure(text='Enter a # > 0 and' +
                                                f'# < 1/2 of {bj.player_bet}')
             player_entry.delete(0, END)
             raise Exception('user input amount not within parameters')
-                
+    if bj.cardSum(bj.dealer_hand) == 21:
+        dealer_hand_label_1.configure(image=root.dealer_card_1)
+    special_case_button.configure(state=DISABLED, text='spesh')
     player_entry.delete(0, END)
-    
     bj.rounds_played += 1
     player_entry_instruction.configure(text=f'Round of play:{bj.rounds_played}')
     player_entry.configure(state=DISABLED)
-    startGame()
+
+    
 
 
 def splitPairs():
