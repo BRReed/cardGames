@@ -6,7 +6,7 @@ from black_jack import BlackJack
 bj = BlackJack()
 root = Tk()
 root.title("Black Jack")
-root.geometry("500x450")
+root.geometry("500x500")
 
 top_frame = Frame(root, bg='cyan', width=500, height=50, pady=3)
 dealer_title_frame = Frame(root, bg='black', width=500, height=25, pady=3)
@@ -153,28 +153,26 @@ def startGame():
     player_title.configure(text='Your Hand Total:' +
                            f'{bj.cardSum(bj.player_hand)}')
     
-    if bj.dealer_hand[0].rank == 14:
-        special_case_button.configure(state=NORMAL, text='Insurance',
-                                      command=insurance)
-    if (bj.player_hand[0].rank == bj.player_hand[1].rank) and (
-          bj.player_hand[0].rank == 5):
-        special_case_button.configure(state=NORMAL, text='Double Down',
-                                      command=doubleDown)
-        if bj.player_hand[0].rank == bj.player_hand[1].rank:
-            special_case_button2.configure(state=NORMAL, text='Split',
-                                           command=splitPairs)
-    elif bj.player_hand[0].rank == bj.player_hand[1].rank:
-        special_case_button.configure(state=NORMAL, text='Split',
-                                      command=splitPairs)
-    elif bj.cardSum(bj.player_hand) == 21:
-        special_case_button.configure(state=NORMAL, text='Continue',
+
+
+    if bj.cardSum(bj.player_hand) == 21:
+        special_case_button.configure(state=NORMAL, text='Cont',
                                       command=natural21)
         player_entry_instruction.configure(text='You got a Natural 21!')
         hit_button.configure(state=DISABLED)
         stand_button.configure(state=DISABLED)
         player_title.configure(text='Your Hand Total:' +
                                f'{bj.cardSum(bj.player_hand)}')
-    
+    else:
+        if bj.dealer_hand[0].rank == 14:
+            special_case_button.configure(state=NORMAL, text='Insure',
+                                          command=insurance)
+        if bj.player_hand[0].rank == bj.player_hand[1].rank:
+            special_case_button1.configure(state=NORMAL, text='Split',
+                                          command=splitPairs)
+        if (bj.player_hand[0].rank + bj.player_hand[1].rank) in range(9, 12):
+            special_case_button2.configure(state=NORMAL, text='D Down',
+                                          command=doubleDown)
 
 
 def insurance():
@@ -195,15 +193,18 @@ def insurance():
             player_entry.delete(0, END)
             raise Exception('user input amount not within parameters')
     if bj.cardSum(bj.dealer_hand) == 21:
+        player_entry.delete(0, END)
         dealer_hand_label_1.configure(image=root.dealer_card_1)
         hit_button.configure(state=DISABLED)
         stand_button.configure(state=DISABLED)
+        special_case_button.configure(state=DISABLED, text='spesh')
         endGame()
-    special_case_button.configure(state=DISABLED, text='spesh')
-    player_entry.delete(0, END)
-    bj.rounds_played += 1
-    player_entry_instruction.configure(text=f'Round of play:{bj.rounds_played}')
-    player_entry.configure(state=DISABLED)
+    else:
+        special_case_button.configure(state=DISABLED, text='spesh')
+        player_entry.delete(0, END)
+        bj.rounds_played += 1
+        player_entry_instruction.configure(text=f'Round of play:{bj.rounds_played}')
+        player_entry.configure(state=DISABLED)
 
     
 
@@ -389,20 +390,22 @@ player_entry_instruction = Label(top_frame, text='Press start to begin')
 player_entry = Entry(top_frame, state=DISABLED)
 hit_button = Button(top_frame, text='Hit', state=DISABLED,
                     command=hit)
-special_case_button = Button(top_frame, text='Spesh', state=DISABLED)
+special_case_button = Button(top_frame, text='Spesh1', state=DISABLED)
 special_case_button2 = Button(top_frame, text='Spesh2', state=DISABLED)
+special_case_button3 = Button(top_frame, text ='Spesh3', state=DISABLED)
 stand_button = Button(top_frame, text='Stand', state=DISABLED, command=stand)
 
-total_money.grid(row=0, column=1, columnspan=2)
-current_bet.grid(row=1, column=1, columnspan=2)
+total_money.grid(row=0, column=1, columnspan=3)
+current_bet.grid(row=1, column=1, columnspan=3)
 start_button.grid(row=3, column=0)
-quit_button.grid(row=3, column=3)
-player_entry_instruction.grid(row=4, column=1, columnspan=2)
-player_entry.grid(row=5, column=1, columnspan=2)
+quit_button.grid(row=3, column=4)
+player_entry_instruction.grid(row=4, column=1, columnspan=3)
+player_entry.grid(row=5, column=1, columnspan=3)
 hit_button.grid(row=6, column=0)
-special_case_button.grid(row=6, column=1)
-special_case_button2.grid(row=6, column=2)
-stand_button.grid(row=6, column=3)
+special_case_button.grid(row=7, column=1)
+special_case_button2.grid(row=7, column=2)
+special_case_button3.grid(row=7, column=3)
+stand_button.grid(row=6, column=4)
 
 dealer_title = Label(dealer_title_frame,
                      text=f'Dealer\'s Hand Total: {bj.cardSum(bj.dealer_hand)}'
