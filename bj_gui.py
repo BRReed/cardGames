@@ -220,7 +220,6 @@ def doubleDown():
 def natural21():
     """Set conditions if player has a natural 21."""
     bj.endRound()
-    special_case_button.configure(state=DISABLED, text='spesh')
     clearHands()
     endGame()
 
@@ -229,6 +228,7 @@ def hit():
     """Player hit and show card."""
     special_case_button.configure(state=DISABLED, text='spesh')
     special_case_button2.configure(state=DISABLED, text='spesh')
+    special_case_button3.configure(state=DISABLED, text='spesh')
     hit_amount = 0
     for _ in bj.player_hand:
         hit_amount += 1
