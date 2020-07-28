@@ -214,7 +214,11 @@ def splitPairs():
 
 
 def doubleDown():
-    pass
+    hit_button.configure(state=DISABLED)
+    stand_button.configure(state=DISABLED)
+    hit()
+    showDealerCards()
+    endGame()
 
 
 def natural21():
