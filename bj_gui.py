@@ -168,10 +168,10 @@ def startGame():
             special_case_button.configure(state=NORMAL, text='Insure',
                                           command=insurance)
         if bj.player_hand[0].rank == bj.player_hand[1].rank:
-            special_case_button1.configure(state=NORMAL, text='Split',
+            special_case_button2.configure(state=NORMAL, text='Split',
                                           command=splitPairs)
         if (bj.player_hand[0].rank + bj.player_hand[1].rank) in range(9, 12):
-            special_case_button2.configure(state=NORMAL, text='D Down',
+            special_case_button3.configure(state=NORMAL, text='D Down',
                                           command=doubleDown)
 
 
