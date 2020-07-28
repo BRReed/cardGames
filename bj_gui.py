@@ -216,8 +216,11 @@ def splitPairs():
 def doubleDown():
     hit_button.configure(state=DISABLED)
     stand_button.configure(state=DISABLED)
+    bj.player_bet += bj.player_bet
+    current_bet.configure(text=f'Current bet: ${bj.player_bet}')
     hit()
     showDealerCards()
+    bj.endRound()
     endGame()
 
 
