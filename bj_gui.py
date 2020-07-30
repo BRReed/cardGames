@@ -225,53 +225,60 @@ def natural21():
     endGame()
 
 
-def hit():
-    """Player hit and show card."""
-    special_case_button.configure(state=DISABLED, text='spesh')
-    special_case_button2.configure(state=DISABLED, text='spesh')
-    hit_amount = 0
-    for _ in bj.player_hand:
-        hit_amount += 1
+def showPlayerCards(hand):
+    """Display cards in played hand."""
+    card_amount = 0
+    for _ in hand:
+        card_amount += 1
     bj.playerHit(bj.player_hand)
-    if hit_amount == 2:
+    if card_amount == 2:
         root.player_card_2 = ImageTk.PhotoImage(Image.open(getCard(
-                                                bj.player_hand, 2)))
+                                                hand, 2)))
         player_hand_label_2.configure(image=root.player_card_2)
-    elif hit_amount == 3:
+    elif card_amount == 3:
         root.player_card_3 = ImageTk.PhotoImage(Image.open(getCard(
-                                                bj.player_hand, 3)))
+                                                hand, 3)))
         player_hand_label_3.configure(image=root.player_card_3)
-    elif hit_amount == 4:
+    elif card_amount == 4:
         root.player_card_4 = ImageTk.PhotoImage(Image.open(getCard(
-                                                bj.player_hand, 4)))
+                                                hand, 4)))
         player_hand_label_4.configure(image=root.player_card_4)
-    elif hit_amount == 5:
+    elif card_amount == 5:
         root.player_card_5 = ImageTk.PhotoImage(Image.open(getCard(
-                                                bj.player_hand, 5)))
+                                                hand, 5)))
         player_hand_label_5.configure(image=root.player_card_5)
-    elif hit_amount == 6:
+    elif card_amount == 6:
         root.player_card_6 = ImageTk.PhotoImage(Image.open(getCard(
-                                                bj.player_hand, 6)))
+                                                hand, 6)))
         player_hand_label_6.configure(image=root.player_card_6)
-    elif hit_amount == 7:
+    elif card_amount == 7:
         root.player_card_7 = ImageTk.PhotoImage(Image.open(getCard(
-                                                bj.player_hand, 7)))
+                                                hand, 7)))
         player_hand_label_7.configure(image=root.player_card_7)
-    elif hit_amount == 8:
+    elif card_amount == 8:
         root.player_card_8 = ImageTk.PhotoImage(Image.open(getCard(
-                                                bj.player_hand, 8)))
+                                                hand, 8)))
         player_hand_label_8.configure(image=root.player_card_8)
-    elif hit_amount == 9:
+    elif card_amount == 9:
         root.player_card_9 = ImageTk.PhotoImage(Image.open(getCard(
-                                                bj.player_hand, 9)))
+                                                hand, 9)))
         player_hand_label_9.configure(image=root.player_card_9)
-    elif hit_amount == 10:
+    elif card_amount == 10:
         root.player_card_10 = ImageTk.PhotoImage(Image.open(getCard(
-                                                 bj.player_hand, 10)))
+                                                 hand, 10)))
         player_hand_label_10.configure(image=root.player_card_10)
     else:
         print('hit_amount in hit function not within parameters')
-    if bj.cardSum(bj.player_hand) > 21:
+
+
+
+def hit(hand):
+    """Player hit and show card."""
+    special_case_button.configure(state=DISABLED, text='spesh')
+    special_case_button2.configure(state=DISABLED, text='spesh')
+    special_case_button3.configure(state=DISABLED, text='spesh')
+    showPlayerCards(hand)
+    if bj.cardSum(hand) > 21:
         hit_button.configure(state=DISABLED)
         stand_button.configure(state=DISABLED)
         root.dealer_card_1 = ImageTk.PhotoImage(Image.open(getCard(
@@ -280,7 +287,7 @@ def hit():
         bj.endRound()
         endGame()
     player_title.configure(text='Your Hand Total:' +
-                           f'{bj.cardSum(bj.player_hand)}')
+                           f'{bj.cardSum(hand)}')
 
 
 def showDealerCards():
@@ -389,7 +396,7 @@ quit_button = Button(top_frame, text='Quit', state=NORMAL, command=closeWindow)
 player_entry_instruction = Label(top_frame, text='Press start to begin')
 player_entry = Entry(top_frame, state=DISABLED)
 hit_button = Button(top_frame, text='Hit', state=DISABLED,
-                    command=hit)
+                    command= lambda: hit(bj.player_hand))
 special_case_button = Button(top_frame, text='Spesh1', state=DISABLED)
 special_case_button2 = Button(top_frame, text='Spesh2', state=DISABLED)
 special_case_button3 = Button(top_frame, text ='Spesh3', state=DISABLED)
