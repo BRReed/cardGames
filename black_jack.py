@@ -89,15 +89,16 @@ class BlackJack:
         self.dealer_hand.append(self.deck.drawCard())
         self.dealer_hand.append(self.deck.drawCard())
 
-    def endRound(self):
+    def endRound(self, ehand):
         """End round."""
-        if (self.cardSum(self.player_hand) <= 21) and (self.cardSum(self.dealer_hand) 
+        self.ehand = ehand
+        if (self.cardSum(self.ehand) <= 21) and (self.cardSum(self.dealer_hand) 
             > 21):
            self.player_money += self.player_bet
-        elif (self.cardSum(self.player_hand) > self.cardSum(
-              self.dealer_hand)) and (self.cardSum(self.player_hand) <= 21):
+        elif (self.cardSum(self.ehand) > self.cardSum(
+              self.dealer_hand)) and (self.cardSum(self.ehand) <= 21):
              self.player_money += self.player_bet
-        elif self.cardSum(self.player_hand) == self.cardSum(self.dealer_hand):
+        elif self.cardSum(self.ehand) == self.cardSum(self.dealer_hand):
             pass
         else:
             self.player_money -= self.player_bet

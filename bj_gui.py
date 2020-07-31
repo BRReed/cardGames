@@ -210,7 +210,23 @@ def insurance():
 
 
 def splitPairs():
-    pass
+    """Set conditions for splitting pairs"""
+    special_case_button.configure(state=DISABLED, text='spesh')
+    special_case_button2.configure(state=DISABLED, text='spesh')
+    special_case_button3.configure(state=DISABLED, text='spesh')
+    bj.splitPairs()
+    if bj.split_hand[0].rank == 14:
+        showDealerCards()
+        showPlayerCards(bj.split_hand)
+        special_case_button.configure(state=NORMAL, text='Next',
+                                      command= lambda: showPlayerCards(bj.player_hand))
+        bj.endRound(bj.split_hand)
+        bj.endRound(bj.player_hand)
+        endGame()
+    else:
+        pass
+        
+    
 
 
 def doubleDown():
@@ -219,7 +235,7 @@ def doubleDown():
 
 def natural21():
     """Set conditions if player has a natural 21."""
-    bj.endRound()
+    bj.endRound(bj.player_hand)
     special_case_button.configure(state=DISABLED, text='spesh')
     clearHands()
     endGame()
@@ -284,7 +300,7 @@ def hit(hand):
         root.dealer_card_1 = ImageTk.PhotoImage(Image.open(getCard(
                                                     bj.dealer_hand, 1)))
         dealer_hand_label_1.configure(image=root.dealer_card_1)
-        bj.endRound()
+        bj.endRound(bj.player_hand)
         endGame()
     player_title.configure(text='Your Hand Total:' +
                            f'{bj.cardSum(hand)}')
@@ -345,7 +361,7 @@ def stand():
     hit_button.configure(state=DISABLED)
     stand_button.configure(state=DISABLED)
     showDealerCards()
-    bj.endRound()
+    bj.endRound(bj.player_hand)
     endGame()
 
 
