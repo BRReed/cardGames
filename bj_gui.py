@@ -223,6 +223,8 @@ def splitPairs():
     player_hand_label_0.configure(image=root.player_card_0)
     player_hand_label_1.configure(image=root.player_card_1)
     if bj.split_hand[0].rank == 14:
+        hit_button.configure(state=DISABLED)
+        stand_button.configure(state=DISABLED)
         showDealerCards()
         special_case_button.configure(state=NORMAL, text='Next',
                                       command= lambda: showPlayerCards(bj.player_hand))
@@ -364,6 +366,7 @@ def stand():
     """End round for player."""
     special_case_button.configure(state=DISABLED, text='spesh')
     special_case_button2.configure(state=DISABLED, text='spesh')
+    special_case_button3.configure(state=DISABLED, text='spesh')
     hit_button.configure(state=DISABLED)
     stand_button.configure(state=DISABLED)
     showDealerCards()
