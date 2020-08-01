@@ -215,9 +215,15 @@ def splitPairs():
     special_case_button2.configure(state=DISABLED, text='spesh')
     special_case_button3.configure(state=DISABLED, text='spesh')
     bj.splitPairs()
+    root.player_card_0 = ImageTk.PhotoImage(Image.open(getCard(bj.split_hand,
+                                                               0)))
+    root.player_card_1 = ImageTk.PhotoImage(Image.open(getCard(bj.split_hand,
+                                                               1)))
+    
+    player_hand_label_0.configure(image=root.player_card_0)
+    player_hand_label_1.configure(image=root.player_card_1)
     if bj.split_hand[0].rank == 14:
         showDealerCards()
-        showPlayerCards(bj.split_hand)
         special_case_button.configure(state=NORMAL, text='Next',
                                       command= lambda: showPlayerCards(bj.player_hand))
         bj.endRound(bj.split_hand)
@@ -246,7 +252,7 @@ def showPlayerCards(hand):
     card_amount = 0
     for _ in hand:
         card_amount += 1
-    bj.playerHit(bj.player_hand)
+    bj.playerHit(hand)
     if card_amount == 2:
         root.player_card_2 = ImageTk.PhotoImage(Image.open(getCard(
                                                 hand, 2)))
