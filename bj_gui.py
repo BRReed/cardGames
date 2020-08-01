@@ -227,14 +227,17 @@ def splitPairs():
         stand_button.configure(state=DISABLED)
         showDealerCards()
         special_case_button.configure(state=NORMAL, text='Next',
-                                      command= lambda: showPlayerCards(bj.player_hand))
-        bj.endRound(bj.split_hand)
-        bj.endRound(bj.player_hand)
-        endGame()
+                                      command=splitPairs2)
     else:
         pass
         
     
+def splitPairs2():
+    special_case_button.configure(text='End', command=endGame)
+    showPlayerCards(bj.player_hand)
+    bj.endRound(bj.split_hand)
+    bj.endRound(bj.player_hand)
+
 
 
 def doubleDown():
