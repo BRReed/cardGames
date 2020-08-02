@@ -53,7 +53,7 @@ class BlackJack:
         """Split pairs."""
         self.split_hand = []
         self.split_bet = self.player_bet
-        self.split_hand.append(self.player_hand.pop(0))
+        self.split_hand.append(self.player_hand.pop())
         self.split_hand.append(self.deck.drawCard())
         self.player_hand.append(self.deck.drawCard())
 

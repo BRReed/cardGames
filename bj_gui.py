@@ -206,6 +206,7 @@ def insurance():
         player_entry_instruction.configure(text=f'Round of play:{bj.rounds_played}')
         player_entry.configure(state=DISABLED)
 
+
     
 
 
@@ -215,6 +216,8 @@ def splitPairs():
     special_case_button2.configure(state=DISABLED, text='spesh')
     special_case_button3.configure(state=DISABLED, text='spesh')
     bj.splitPairs()
+    player_title.configure(text='Your Hand Total:' +
+                           f'{bj.cardSum(bj.split_hand)}')
     root.player_card_0 = ImageTk.PhotoImage(Image.open(getCard(bj.split_hand,
                                                                0)))
     root.player_card_1 = ImageTk.PhotoImage(Image.open(getCard(bj.split_hand,
@@ -227,16 +230,34 @@ def splitPairs():
         stand_button.configure(state=DISABLED)
         showDealerCards()
         special_case_button.configure(state=NORMAL, text='Next',
-                                      command=splitPairs2)
+                                      command=splitPairsAces)
     else:
-        pass
-        
+        hit_button.configure(state=NORMAL, command= lambda: hit(bj.split_hand))
+        stand_button.configure(state=NORMAL, command=splitPairs2)
     
+
 def splitPairs2():
+    start_button.configure(state=DISABLED)
+    player_title.configure(text='Your Hand Total:' +
+                           f'{bj.cardSum(bj.player_hand)}')
+    bj.endRound(bj.split_hand)
+    root.player_card_0 = ImageTk.PhotoImage(Image.open(getCard(bj.player_hand,
+                                                               0)))
+    root.player_card_1 = ImageTk.PhotoImage(Image.open(getCard(bj.player_hand,
+                                                               1)))
+    
+    player_hand_label_0.configure(image=root.player_card_0)
+    player_hand_label_1.configure(image=root.player_card_1)
+    hit_button.configure(state=NORMAL, command= lambda: hit(bj.player_hand))
+    stand_button.configure(command=stand)
+
+    
+def splitPairsAces():
     special_case_button.configure(text='End', command=endGame)
     showPlayerCards(bj.player_hand)
     bj.endRound(bj.split_hand)
     bj.endRound(bj.player_hand)
+    
 
 
 
@@ -308,13 +329,17 @@ def hit(hand):
     if bj.cardSum(hand) > 21:
         hit_button.configure(state=DISABLED)
         stand_button.configure(state=DISABLED)
-        root.dealer_card_1 = ImageTk.PhotoImage(Image.open(getCard(
+        if hand[0].suit == bj.player_hand[0].suit and hand[0].rank == bj.player_hand[0].rank:
+            root.dealer_card_1 = ImageTk.PhotoImage(Image.open(getCard(
                                                     bj.dealer_hand, 1)))
-        dealer_hand_label_1.configure(image=root.dealer_card_1)
-        bj.endRound(bj.player_hand)
-        endGame()
+            dealer_hand_label_1.configure(image=root.dealer_card_1)
+            bj.endRound(bj.player_hand)
+            endGame()
+        else:
+            start_button.configure(state=NORMAL, command=splitPairs2)
     player_title.configure(text='Your Hand Total:' +
                            f'{bj.cardSum(hand)}')
+        
 
 
 def showDealerCards():
@@ -406,6 +431,9 @@ def clearHands():
 
 def endGame():
     """Change items in GUI to end round."""
+    special_case_button.configure(state=DISABLED)
+    special_case_button2.configure(state=DISABLED)
+    special_case_button3.configure(state=DISABLED)
     dealer_title.configure(text='Dealer\'s Hand Total:' +
                            f'{bj.cardSum(bj.dealer_hand)}')
     player_title.configure(text='Your Hand Total:' +
