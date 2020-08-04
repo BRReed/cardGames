@@ -126,7 +126,8 @@ def playerBetGet():
 
 def startGame():
     """Set conditions for round start."""
-    clearHands()
+    clearPlayerHand()
+    clearDealerHand()
     start_button.configure(state=DISABLED)
     bj.player_hand.clear()
     bj.dealer_hand.clear()
@@ -238,6 +239,7 @@ def splitPairs():
     
 
 def splitPairs2():
+    clearPlayerHand()
     bj.dealerHit()
     bj.endRound(bj.split_hand)
     start_button.configure(state=DISABLED)
@@ -271,7 +273,8 @@ def natural21():
     """Set conditions if player has a natural 21."""
     bj.endRound(bj.player_hand)
     special_case_button.configure(state=DISABLED, text='spesh')
-    clearHands()
+    clearPlayerHand()
+    clearDealerHand()
     endGame()
 
 
@@ -413,7 +416,21 @@ def stand():
     endGame()
 
 
-def clearHands():
+def clearPlayerHand():
+    player_hand_label_10.configure(image=root.sm_card_blank)
+    player_hand_label_9.configure(image=root.sm_card_blank)
+    player_hand_label_8.configure(image=root.sm_card_blank)
+    player_hand_label_7.configure(image=root.sm_card_blank)
+    player_hand_label_6.configure(image=root.sm_card_blank)
+    player_hand_label_5.configure(image=root.sm_card_blank)
+    player_hand_label_4.configure(image=root.sm_card_blank)
+    player_hand_label_3.configure(image=root.sm_card_blank)
+    player_hand_label_2.configure(image=root.sm_card_blank)
+    player_hand_label_1.configure(image=root.sm_card_blank)
+    player_hand_label_0.configure(image=root.card_blank)
+
+
+def clearDealerHand():
     """Return all card labels to blanks."""
     dealer_hand_label_10.configure(image=root.sm_card_blank)
     dealer_hand_label_9.configure(image=root.sm_card_blank)
@@ -426,18 +443,6 @@ def clearHands():
     dealer_hand_label_2.configure(image=root.sm_card_blank)
     dealer_hand_label_1.configure(image=root.sm_card_blank)
     dealer_hand_label_0.configure(image=root.card_blank)
-
-    player_hand_label_10.configure(image=root.sm_card_blank)
-    player_hand_label_9.configure(image=root.sm_card_blank)
-    player_hand_label_8.configure(image=root.sm_card_blank)
-    player_hand_label_7.configure(image=root.sm_card_blank)
-    player_hand_label_6.configure(image=root.sm_card_blank)
-    player_hand_label_5.configure(image=root.sm_card_blank)
-    player_hand_label_4.configure(image=root.sm_card_blank)
-    player_hand_label_3.configure(image=root.sm_card_blank)
-    player_hand_label_2.configure(image=root.sm_card_blank)
-    player_hand_label_1.configure(image=root.sm_card_blank)
-    player_hand_label_0.configure(image=root.card_blank)
 
 
 def endGame():
