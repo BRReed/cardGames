@@ -180,6 +180,8 @@ def insurance():
     player_entry_instruction.configure(text='Enter your insurance amount')
     player_entry.configure(state=NORMAL, text='')
     special_case_button.configure(text='Enter')
+    hit_button.configure(state=DISABLED)
+    stand_button.configure(state=DISABLED)
     while True:
         try:
             ins_bet_get = int(player_entry.get())
@@ -196,12 +198,12 @@ def insurance():
     if bj.cardSum(bj.dealer_hand) == 21:
         player_entry.delete(0, END)
         dealer_hand_label_1.configure(image=root.dealer_card_1)
-        hit_button.configure(state=DISABLED)
-        stand_button.configure(state=DISABLED)
         special_case_button.configure(state=DISABLED, text='spesh')
         endGame()
     else:
         special_case_button.configure(state=DISABLED, text='spesh')
+        hit_button.configure(state=NORMAL)
+        stand_button.configure(state=NORMAL)
         player_entry.delete(0, END)
         bj.rounds_played += 1
         player_entry_instruction.configure(text=f'Round of play:{bj.rounds_played}')
