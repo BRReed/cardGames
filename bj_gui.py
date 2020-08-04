@@ -266,7 +266,13 @@ def splitPairsAces():
 
 
 def doubleDown():
-    pass
+    hit_button.configure(state=DISABLED)
+    stand_button.configure(state=DISABLED)
+    bj.doubleDown()
+    bj.dealerHit()
+    showPlayerCards(bj.player_hand)
+    bj.endRound(bj.player_hand)
+    endGame()
 
 
 def natural21():
@@ -281,42 +287,42 @@ def natural21():
 def showPlayerCards(hand):
     """Display cards in played hand."""
     card_amount = 0
+    bj.playerHit(bj.player_hand)
     for _ in hand:
         card_amount += 1
-    bj.playerHit(hand)
-    if card_amount == 2:
+    if card_amount == 3:
         root.player_card_2 = ImageTk.PhotoImage(Image.open(getCard(
                                                 hand, 2)))
         player_hand_label_2.configure(image=root.player_card_2)
-    elif card_amount == 3:
+    elif card_amount == 4:
         root.player_card_3 = ImageTk.PhotoImage(Image.open(getCard(
                                                 hand, 3)))
         player_hand_label_3.configure(image=root.player_card_3)
-    elif card_amount == 4:
+    elif card_amount == 5:
         root.player_card_4 = ImageTk.PhotoImage(Image.open(getCard(
                                                 hand, 4)))
         player_hand_label_4.configure(image=root.player_card_4)
-    elif card_amount == 5:
+    elif card_amount == 6:
         root.player_card_5 = ImageTk.PhotoImage(Image.open(getCard(
                                                 hand, 5)))
         player_hand_label_5.configure(image=root.player_card_5)
-    elif card_amount == 6:
+    elif card_amount == 7:
         root.player_card_6 = ImageTk.PhotoImage(Image.open(getCard(
                                                 hand, 6)))
         player_hand_label_6.configure(image=root.player_card_6)
-    elif card_amount == 7:
+    elif card_amount == 8:
         root.player_card_7 = ImageTk.PhotoImage(Image.open(getCard(
                                                 hand, 7)))
         player_hand_label_7.configure(image=root.player_card_7)
-    elif card_amount == 8:
+    elif card_amount == 9:
         root.player_card_8 = ImageTk.PhotoImage(Image.open(getCard(
                                                 hand, 8)))
         player_hand_label_8.configure(image=root.player_card_8)
-    elif card_amount == 9:
+    elif card_amount == 10:
         root.player_card_9 = ImageTk.PhotoImage(Image.open(getCard(
                                                 hand, 9)))
         player_hand_label_9.configure(image=root.player_card_9)
-    elif card_amount == 10:
+    elif card_amount == 11:
         root.player_card_10 = ImageTk.PhotoImage(Image.open(getCard(
                                                  hand, 10)))
         player_hand_label_10.configure(image=root.player_card_10)

@@ -57,6 +57,9 @@ class BlackJack:
         self.split_hand.append(self.deck.drawCard())
         self.player_hand.append(self.deck.drawCard())
 
+    def doubleDown(self):
+        self.player_bet += self.player_bet
+
     def playerHit(self, hand):
         """Append cards to player's hand."""
         self.hand = hand
@@ -106,7 +109,3 @@ class BlackJack:
             pass
         else:
             self.player_money -= self.player_bet
-        print (self.player_money)
-
-
-
