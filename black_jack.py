@@ -36,7 +36,8 @@ class BlackJack:
             and (self.hand[0].rank in range(10, 14) or
                  self.hand[1].rank in range(10, 14))):
             if self.dealer_hand != 21:
-                self.endRound()
+                self.player_bet *= 1.5
+                self.endRound(self.player_hand)
 
     def insurance(self, ins_bet):
         """Insure round per user input."""
@@ -96,16 +97,16 @@ class BlackJack:
         self.dealer_hand.append(self.deck.drawCard())
         self.dealer_hand.append(self.deck.drawCard())
 
-    def endRound(self, hand):
+    def endRound(self, ehand):
         """End round."""
-        self.hand = hand
-        if (self.cardSum(self.hand) <= 21) and (self.cardSum(self.dealer_hand) 
+        self.ehand = ehand
+        if (self.cardSum(self.ehand) <= 21) and (self.cardSum(self.dealer_hand) 
                                                  > 21):
            self.player_money += self.player_bet
-        elif (self.cardSum(self.hand) > self.cardSum(
-              self.dealer_hand)) and (self.cardSum(self.hand) <= 21):
+        elif (self.cardSum(self.ehand) > self.cardSum(
+              self.dealer_hand)) and (self.cardSum(self.ehand) <= 21):
              self.player_money += self.player_bet
-        elif self.cardSum(self.hand) == self.cardSum(self.dealer_hand):
+        elif self.cardSum(self.ehand) == self.cardSum(self.dealer_hand):
             pass
         else:
             self.player_money -= self.player_bet
