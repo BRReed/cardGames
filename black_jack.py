@@ -62,6 +62,10 @@ class BlackJack:
         self.hand = hand
         self.hand.append(self.deck.drawCard())
 
+    def dealerHit(self):
+        while self.cardSum(self.dealer_hand) < 17:
+            self.dealer_hand.append(self.deck.drawCard())
+
     def cardSum(self, hand):
         """Count card values in hand."""
         self.hand = hand
@@ -93,7 +97,7 @@ class BlackJack:
         """End round."""
         self.ehand = ehand
         if (self.cardSum(self.ehand) <= 21) and (self.cardSum(self.dealer_hand) 
-            > 21):
+                                                 > 21):
            self.player_money += self.player_bet
         elif (self.cardSum(self.ehand) > self.cardSum(
               self.dealer_hand)) and (self.cardSum(self.ehand) <= 21):
@@ -102,6 +106,7 @@ class BlackJack:
             pass
         else:
             self.player_money -= self.player_bet
+        print (self.player_money)
 
 
 

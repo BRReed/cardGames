@@ -228,6 +228,7 @@ def splitPairs():
     if bj.split_hand[0].rank == 14:
         hit_button.configure(state=DISABLED)
         stand_button.configure(state=DISABLED)
+        bj.dealerHit()
         showDealerCards()
         special_case_button.configure(state=NORMAL, text='Next',
                                       command=splitPairsAces)
@@ -237,10 +238,11 @@ def splitPairs():
     
 
 def splitPairs2():
+    bj.dealerHit()
+    bj.endRound(bj.split_hand)
     start_button.configure(state=DISABLED)
     player_title.configure(text='Your Hand Total:' +
                            f'{bj.cardSum(bj.player_hand)}')
-    bj.endRound(bj.split_hand)
     root.player_card_0 = ImageTk.PhotoImage(Image.open(getCard(bj.player_hand,
                                                                0)))
     root.player_card_1 = ImageTk.PhotoImage(Image.open(getCard(bj.player_hand,
@@ -249,7 +251,7 @@ def splitPairs2():
     player_hand_label_0.configure(image=root.player_card_0)
     player_hand_label_1.configure(image=root.player_card_1)
     hit_button.configure(state=NORMAL, command= lambda: hit(bj.player_hand))
-    stand_button.configure(command=stand)
+    stand_button.configure(state=NORMAL, command=stand)
 
     
 def splitPairsAces():
@@ -345,47 +347,55 @@ def hit(hand):
 def showDealerCards():
     """Dealer hit and show in GUI."""
     dealer_hand_label_1.configure(image=root.dealer_card_1)
-    while bj.cardSum(bj.dealer_hand) < 17:
-        dealer_hit = 0
-        for _ in bj.dealer_hand:
-            dealer_hit += 1
-        bj.dealer_hand.append(bj.deck.drawCard())
-        if dealer_hit == 2:
+    dealer_hit = 0
+    for _ in bj.dealer_hand:
+        dealer_hit += 1
+    while dealer_hit > 2:
+        if dealer_hit == 3:
             root.dealer_card_2 = ImageTk.PhotoImage(Image.open(getCard(
                                                     bj.dealer_hand, 2)))
             dealer_hand_label_2.configure(image=root.dealer_card_2)
-        elif dealer_hit == 3:
+            dealer_hit -= 1
+        elif dealer_hit == 4:
             root.dealer_card_3 = ImageTk.PhotoImage(Image.open(getCard(
                                                     bj.dealer_hand, 3)))
             dealer_hand_label_3.configure(image=root.dealer_card_3)
-        elif dealer_hit == 4:
+            dealer_hit -= 1
+        elif dealer_hit == 5:
             root.dealer_card_4 = ImageTk.PhotoImage(Image.open(getCard(
                                                     bj.dealer_hand, 4)))
             dealer_hand_label_4.configure(image=root.dealer_card_4)
-        elif dealer_hit == 5:
+            dealer_hit -= 1
+        elif dealer_hit == 6:
             root.dealer_card_5 = ImageTk.PhotoImage(Image.open(getCard(
                                                     bj.dealer_hand, 5)))
             dealer_hand_label_5.configure(image=root.dealer_card_5)
-        elif dealer_hit == 6:
+            dealer_hit -= 1
+        elif dealer_hit == 7:
             root.dealer_card_6 = ImageTk.PhotoImage(Image.open(getCard(
                                                     bj.dealer_hand, 6)))
             dealer_hand_label_6.configure(image=root.dealer_card_6)
-        elif dealer_hit == 7:
+            dealer_hit -= 1
+        elif dealer_hit == 8:
             root.dealer_card_7 = ImageTk.PhotoImage(Image.open(getCard(
                                                     bj.dealer_hand, 7)))
             dealer_hand_label_7.configure(image=root.dealer_card_7)
-        elif dealer_hit == 8:
+            dealer_hit -= 1
+        elif dealer_hit == 9:
             root.dealer_card_8 = ImageTk.PhotoImage(Image.open(getCard(
                                                     bj.dealer_hand, 8)))
             dealer_hand_label_8.configure(image=root.dealer_card_8)
-        elif dealer_hit == 9:
+            dealer_hit -= 1
+        elif dealer_hit == 10:
             root.dealer_card_9 = ImageTk.PhotoImage(Image.open(getCard(
                                                     bj.dealer_hand, 9)))
             dealer_hand_label_9.configure(image=root.dealer_card_9)
-        elif dealer_hit == 10:
+            dealer_hit -= 1
+        elif dealer_hit == 11:
             root.dealer_card_10 = ImageTk.PhotoImage(Image.open(getCard(
                                                      bj.dealer_hand, 10)))
             dealer_hand_label_10.configure(image=root.dealer_card_10)
+            dealer_hit -= 1
         else:
             print('showDealerCards function not within parameters')
 
@@ -397,6 +407,7 @@ def stand():
     special_case_button3.configure(state=DISABLED, text='spesh')
     hit_button.configure(state=DISABLED)
     stand_button.configure(state=DISABLED)
+    bj.dealerHit()
     showDealerCards()
     bj.endRound(bj.player_hand)
     endGame()
