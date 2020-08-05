@@ -36,7 +36,8 @@ class BlackJack:
             and (self.hand[0].rank in range(10, 14) or
                  self.hand[1].rank in range(10, 14))):
             if self.dealer_hand != 21:
-                self.endRound()
+                self.player_bet *= 1.5
+                self.endRound(self.player_hand)
 
     def insurance(self, ins_bet):
         """Insure round per user input."""
@@ -53,14 +54,21 @@ class BlackJack:
         """Split pairs."""
         self.split_hand = []
         self.split_bet = self.player_bet
-        self.split_hand.append(self.player_hand.pop(0))
+        self.split_hand.append(self.player_hand.pop())
         self.split_hand.append(self.deck.drawCard())
         self.player_hand.append(self.deck.drawCard())
+
+    def doubleDown(self):
+        self.player_bet += self.player_bet
 
     def playerHit(self, hand):
         """Append cards to player's hand."""
         self.hand = hand
         self.hand.append(self.deck.drawCard())
+
+    def dealerHit(self):
+        while self.cardSum(self.dealer_hand) < 17:
+            self.dealer_hand.append(self.deck.drawCard())
 
     def cardSum(self, hand):
         """Count card values in hand."""
@@ -89,18 +97,16 @@ class BlackJack:
         self.dealer_hand.append(self.deck.drawCard())
         self.dealer_hand.append(self.deck.drawCard())
 
-    def endRound(self):
+    def endRound(self, ehand):
         """End round."""
-        if (self.cardSum(self.player_hand) <= 21) and (self.cardSum(self.dealer_hand) 
-            > 21):
+        self.ehand = ehand
+        if (self.cardSum(self.ehand) <= 21) and (self.cardSum(self.dealer_hand) 
+                                                 > 21):
            self.player_money += self.player_bet
-        elif (self.cardSum(self.player_hand) > self.cardSum(
-              self.dealer_hand)) and (self.cardSum(self.player_hand) <= 21):
+        elif (self.cardSum(self.ehand) > self.cardSum(
+              self.dealer_hand)) and (self.cardSum(self.ehand) <= 21):
              self.player_money += self.player_bet
-        elif self.cardSum(self.player_hand) == self.cardSum(self.dealer_hand):
+        elif self.cardSum(self.ehand) == self.cardSum(self.dealer_hand):
             pass
         else:
             self.player_money -= self.player_bet
-
-
-

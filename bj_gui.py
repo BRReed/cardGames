@@ -7,13 +7,14 @@ bj = BlackJack()
 root = Tk()
 root.title("Black Jack")
 root.geometry("500x500")
+root.configure(bg='white')
 
-top_frame = Frame(root, bg='cyan', width=500, height=50, pady=3)
-dealer_title_frame = Frame(root, bg='black', width=500, height=25, pady=3)
+top_frame = Frame(root, bg='gray78', width=500, height=50, pady=3)
+dealer_title_frame = Frame(root, bg='gray33', width=500, height=25, pady=3)
 dealer_frame = Frame(root, bg='white', width=500, height=150)
-player_title_frame = Frame(root, bg='black', width=500, height=25, pady=3)
+player_title_frame = Frame(root, bg='gray33', width=500, height=25, pady=3)
 player_frame = Frame(root, bg='white', width=500, height=150)
-bot_frame = Frame(root, bg='green', width=500, height=50, pady=3)
+bot_frame = Frame(root, bg='snow', width=500, height=50, pady=3)
 
 root.grid_rowconfigure(1, weight=1)
 root.grid_columnconfigure(0, weight=1)
@@ -126,7 +127,8 @@ def playerBetGet():
 
 def startGame():
     """Set conditions for round start."""
-    clearHands()
+    clearPlayerHand()
+    clearDealerHand()
     start_button.configure(state=DISABLED)
     bj.player_hand.clear()
     bj.dealer_hand.clear()
@@ -179,6 +181,8 @@ def insurance():
     player_entry_instruction.configure(text='Enter your insurance amount')
     player_entry.configure(state=NORMAL, text='')
     special_case_button.configure(text='Enter')
+    hit_button.configure(state=DISABLED)
+    stand_button.configure(state=DISABLED)
     while True:
         try:
             ins_bet_get = int(player_entry.get())
@@ -195,174 +199,234 @@ def insurance():
     if bj.cardSum(bj.dealer_hand) == 21:
         player_entry.delete(0, END)
         dealer_hand_label_1.configure(image=root.dealer_card_1)
-        hit_button.configure(state=DISABLED)
-        stand_button.configure(state=DISABLED)
-        special_case_button.configure(state=DISABLED, text='spesh')
+        special_case_button.configure(state=DISABLED, text='     ')
         endGame()
     else:
-        special_case_button.configure(state=DISABLED, text='spesh')
+        special_case_button.configure(state=DISABLED, text='     ')
+        hit_button.configure(state=NORMAL)
+        stand_button.configure(state=NORMAL)
         player_entry.delete(0, END)
         bj.rounds_played += 1
         player_entry_instruction.configure(text=f'Round of play:{bj.rounds_played}')
         player_entry.configure(state=DISABLED)
 
+
     
 
 
 def splitPairs():
-    pass
+    """Set conditions for splitting pairs"""
+    special_case_button.configure(state=DISABLED, text='     ')
+    special_case_button2.configure(state=DISABLED, text='     ')
+    special_case_button3.configure(state=DISABLED, text='     ')
+    bj.splitPairs()
+    player_title.configure(text='Your Hand Total:' +
+                           f'{bj.cardSum(bj.split_hand)}')
+    root.player_card_0 = ImageTk.PhotoImage(Image.open(getCard(bj.split_hand,
+                                                               0)))
+    root.player_card_1 = ImageTk.PhotoImage(Image.open(getCard(bj.split_hand,
+                                                               1)))
+    
+    player_hand_label_0.configure(image=root.player_card_0)
+    player_hand_label_1.configure(image=root.player_card_1)
+    if bj.split_hand[0].rank == 14:
+        hit_button.configure(state=DISABLED)
+        stand_button.configure(state=DISABLED)
+        bj.dealerHit()
+        showDealerCards()
+        special_case_button.configure(state=NORMAL, text='Next',
+                                      command=splitPairsAces)
+    else:
+        hit_button.configure(state=NORMAL, command= lambda: hit(bj.split_hand))
+        stand_button.configure(state=NORMAL, command=splitPairs2)
+    
+
+def splitPairs2():
+    clearPlayerHand()
+    bj.dealerHit()
+    bj.endRound(bj.split_hand)
+    start_button.configure(state=DISABLED)
+    player_title.configure(text='Your Hand Total:' +
+                           f'{bj.cardSum(bj.player_hand)}')
+    root.player_card_0 = ImageTk.PhotoImage(Image.open(getCard(bj.player_hand,
+                                                               0)))
+    root.player_card_1 = ImageTk.PhotoImage(Image.open(getCard(bj.player_hand,
+                                                               1)))
+    
+    player_hand_label_0.configure(image=root.player_card_0)
+    player_hand_label_1.configure(image=root.player_card_1)
+    hit_button.configure(state=NORMAL, command= lambda: hit(bj.player_hand))
+    stand_button.configure(state=NORMAL, command=stand)
+
+    
+def splitPairsAces():
+    special_case_button.configure(text='End', command=endGame)
+    showPlayerCards(bj.player_hand)
+    bj.endRound(bj.split_hand)
+    bj.endRound(bj.player_hand)
+    
+
 
 
 def doubleDown():
     hit_button.configure(state=DISABLED)
     stand_button.configure(state=DISABLED)
-    bj.player_bet += bj.player_bet
-    current_bet.configure(text=f'Current bet: ${bj.player_bet}')
-    hit()
+    bj.doubleDown()
+    bj.dealerHit()
+    showPlayerCards(bj.player_hand)
     showDealerCards()
-    bj.endRound()
+    bj.endRound(bj.player_hand)
     endGame()
 
 
 def natural21():
     """Set conditions if player has a natural 21."""
-    bj.endRound()
-    clearHands()
+    bj.natural21(bj.player_hand)
+    special_case_button.configure(state=DISABLED, text='     ')
+    clearPlayerHand()
+    clearDealerHand()
     endGame()
 
 
-def hit():
-    """Player hit and show card."""
-    special_case_button.configure(state=DISABLED, text='spesh')
-    special_case_button2.configure(state=DISABLED, text='spesh')
-    special_case_button3.configure(state=DISABLED, text='spesh')
-    hit_amount = 0
-    for _ in bj.player_hand:
-        hit_amount += 1
-    bj.playerHit(bj.player_hand)
-    if hit_amount == 2:
+def showPlayerCards(hand):
+    """Display cards in played hand."""
+    card_amount = 0
+    bj.playerHit(hand)
+    for _ in hand:
+        card_amount += 1
+    if card_amount == 3:
         root.player_card_2 = ImageTk.PhotoImage(Image.open(getCard(
-                                                bj.player_hand, 2)))
+                                                hand, 2)))
         player_hand_label_2.configure(image=root.player_card_2)
-    elif hit_amount == 3:
+    elif card_amount == 4:
         root.player_card_3 = ImageTk.PhotoImage(Image.open(getCard(
-                                                bj.player_hand, 3)))
+                                                hand, 3)))
         player_hand_label_3.configure(image=root.player_card_3)
-    elif hit_amount == 4:
+    elif card_amount == 5:
         root.player_card_4 = ImageTk.PhotoImage(Image.open(getCard(
-                                                bj.player_hand, 4)))
+                                                hand, 4)))
         player_hand_label_4.configure(image=root.player_card_4)
-    elif hit_amount == 5:
+    elif card_amount == 6:
         root.player_card_5 = ImageTk.PhotoImage(Image.open(getCard(
-                                                bj.player_hand, 5)))
+                                                hand, 5)))
         player_hand_label_5.configure(image=root.player_card_5)
-    elif hit_amount == 6:
+    elif card_amount == 7:
         root.player_card_6 = ImageTk.PhotoImage(Image.open(getCard(
-                                                bj.player_hand, 6)))
+                                                hand, 6)))
         player_hand_label_6.configure(image=root.player_card_6)
-    elif hit_amount == 7:
+    elif card_amount == 8:
         root.player_card_7 = ImageTk.PhotoImage(Image.open(getCard(
-                                                bj.player_hand, 7)))
+                                                hand, 7)))
         player_hand_label_7.configure(image=root.player_card_7)
-    elif hit_amount == 8:
+    elif card_amount == 9:
         root.player_card_8 = ImageTk.PhotoImage(Image.open(getCard(
-                                                bj.player_hand, 8)))
+                                                hand, 8)))
         player_hand_label_8.configure(image=root.player_card_8)
-    elif hit_amount == 9:
+    elif card_amount == 10:
         root.player_card_9 = ImageTk.PhotoImage(Image.open(getCard(
-                                                bj.player_hand, 9)))
+                                                hand, 9)))
         player_hand_label_9.configure(image=root.player_card_9)
-    elif hit_amount == 10:
+    elif card_amount == 11:
         root.player_card_10 = ImageTk.PhotoImage(Image.open(getCard(
-                                                 bj.player_hand, 10)))
+                                                 hand, 10)))
         player_hand_label_10.configure(image=root.player_card_10)
     else:
         print('hit_amount in hit function not within parameters')
-    if bj.cardSum(bj.player_hand) > 21:
+
+
+
+def hit(hand):
+    """Player hit and show card."""
+    special_case_button.configure(state=DISABLED, text='     ')
+    special_case_button2.configure(state=DISABLED, text='     ')
+    special_case_button3.configure(state=DISABLED, text='     ')
+    showPlayerCards(hand)
+    if bj.cardSum(hand) > 21:
         hit_button.configure(state=DISABLED)
         stand_button.configure(state=DISABLED)
-        root.dealer_card_1 = ImageTk.PhotoImage(Image.open(getCard(
+        if hand[0].suit == bj.player_hand[0].suit and hand[0].rank == bj.player_hand[0].rank:
+            root.dealer_card_1 = ImageTk.PhotoImage(Image.open(getCard(
                                                     bj.dealer_hand, 1)))
-        dealer_hand_label_1.configure(image=root.dealer_card_1)
-        bj.endRound()
-        endGame()
+            dealer_hand_label_1.configure(image=root.dealer_card_1)
+            bj.endRound(bj.player_hand)
+            endGame()
+        else:
+            start_button.configure(state=NORMAL, command=splitPairs2)
     player_title.configure(text='Your Hand Total:' +
-                           f'{bj.cardSum(bj.player_hand)}')
+                           f'{bj.cardSum(hand)}')
+        
 
 
 def showDealerCards():
     """Dealer hit and show in GUI."""
     dealer_hand_label_1.configure(image=root.dealer_card_1)
-    while bj.cardSum(bj.dealer_hand) < 17:
-        dealer_hit = 0
-        for _ in bj.dealer_hand:
-            dealer_hit += 1
-        bj.dealer_hand.append(bj.deck.drawCard())
-        if dealer_hit == 2:
+    dealer_hit = 0
+    for _ in bj.dealer_hand:
+        dealer_hit += 1
+    while dealer_hit > 2:
+        if dealer_hit == 3:
             root.dealer_card_2 = ImageTk.PhotoImage(Image.open(getCard(
                                                     bj.dealer_hand, 2)))
             dealer_hand_label_2.configure(image=root.dealer_card_2)
-        elif dealer_hit == 3:
+            dealer_hit -= 1
+        elif dealer_hit == 4:
             root.dealer_card_3 = ImageTk.PhotoImage(Image.open(getCard(
                                                     bj.dealer_hand, 3)))
             dealer_hand_label_3.configure(image=root.dealer_card_3)
-        elif dealer_hit == 4:
+            dealer_hit -= 1
+        elif dealer_hit == 5:
             root.dealer_card_4 = ImageTk.PhotoImage(Image.open(getCard(
                                                     bj.dealer_hand, 4)))
             dealer_hand_label_4.configure(image=root.dealer_card_4)
-        elif dealer_hit == 5:
+            dealer_hit -= 1
+        elif dealer_hit == 6:
             root.dealer_card_5 = ImageTk.PhotoImage(Image.open(getCard(
                                                     bj.dealer_hand, 5)))
             dealer_hand_label_5.configure(image=root.dealer_card_5)
-        elif dealer_hit == 6:
+            dealer_hit -= 1
+        elif dealer_hit == 7:
             root.dealer_card_6 = ImageTk.PhotoImage(Image.open(getCard(
                                                     bj.dealer_hand, 6)))
             dealer_hand_label_6.configure(image=root.dealer_card_6)
-        elif dealer_hit == 7:
+            dealer_hit -= 1
+        elif dealer_hit == 8:
             root.dealer_card_7 = ImageTk.PhotoImage(Image.open(getCard(
                                                     bj.dealer_hand, 7)))
             dealer_hand_label_7.configure(image=root.dealer_card_7)
-        elif dealer_hit == 8:
+            dealer_hit -= 1
+        elif dealer_hit == 9:
             root.dealer_card_8 = ImageTk.PhotoImage(Image.open(getCard(
                                                     bj.dealer_hand, 8)))
             dealer_hand_label_8.configure(image=root.dealer_card_8)
-        elif dealer_hit == 9:
+            dealer_hit -= 1
+        elif dealer_hit == 10:
             root.dealer_card_9 = ImageTk.PhotoImage(Image.open(getCard(
                                                     bj.dealer_hand, 9)))
             dealer_hand_label_9.configure(image=root.dealer_card_9)
-        elif dealer_hit == 10:
+            dealer_hit -= 1
+        elif dealer_hit == 11:
             root.dealer_card_10 = ImageTk.PhotoImage(Image.open(getCard(
                                                      bj.dealer_hand, 10)))
             dealer_hand_label_10.configure(image=root.dealer_card_10)
+            dealer_hit -= 1
         else:
             print('showDealerCards function not within parameters')
 
 
 def stand():
     """End round for player."""
-    special_case_button.configure(state=DISABLED, text='spesh')
-    special_case_button2.configure(state=DISABLED, text='spesh')
+    special_case_button.configure(state=DISABLED, text='     ')
+    special_case_button2.configure(state=DISABLED, text='     ')
+    special_case_button3.configure(state=DISABLED, text='     ')
     hit_button.configure(state=DISABLED)
     stand_button.configure(state=DISABLED)
+    bj.dealerHit()
     showDealerCards()
-    bj.endRound()
+    bj.endRound(bj.player_hand)
     endGame()
 
 
-def clearHands():
-    """Return all card labels to blanks."""
-    dealer_hand_label_10.configure(image=root.sm_card_blank)
-    dealer_hand_label_9.configure(image=root.sm_card_blank)
-    dealer_hand_label_8.configure(image=root.sm_card_blank)
-    dealer_hand_label_7.configure(image=root.sm_card_blank)
-    dealer_hand_label_6.configure(image=root.sm_card_blank)
-    dealer_hand_label_5.configure(image=root.sm_card_blank)
-    dealer_hand_label_4.configure(image=root.sm_card_blank)
-    dealer_hand_label_3.configure(image=root.sm_card_blank)
-    dealer_hand_label_2.configure(image=root.sm_card_blank)
-    dealer_hand_label_1.configure(image=root.sm_card_blank)
-    dealer_hand_label_0.configure(image=root.card_blank)
-
+def clearPlayerHand():
     player_hand_label_10.configure(image=root.sm_card_blank)
     player_hand_label_9.configure(image=root.sm_card_blank)
     player_hand_label_8.configure(image=root.sm_card_blank)
@@ -376,13 +440,31 @@ def clearHands():
     player_hand_label_0.configure(image=root.card_blank)
 
 
+def clearDealerHand():
+    """Return all card labels to blanks."""
+    dealer_hand_label_10.configure(image=root.sm_card_blank)
+    dealer_hand_label_9.configure(image=root.sm_card_blank)
+    dealer_hand_label_8.configure(image=root.sm_card_blank)
+    dealer_hand_label_7.configure(image=root.sm_card_blank)
+    dealer_hand_label_6.configure(image=root.sm_card_blank)
+    dealer_hand_label_5.configure(image=root.sm_card_blank)
+    dealer_hand_label_4.configure(image=root.sm_card_blank)
+    dealer_hand_label_3.configure(image=root.sm_card_blank)
+    dealer_hand_label_2.configure(image=root.sm_card_blank)
+    dealer_hand_label_1.configure(image=root.sm_card_blank)
+    dealer_hand_label_0.configure(image=root.card_blank)
+
+
 def endGame():
     """Change items in GUI to end round."""
+    special_case_button.configure(state=DISABLED, text='     ')
+    special_case_button2.configure(state=DISABLED, text='     ')
+    special_case_button3.configure(state=DISABLED, text='     ')
     dealer_title.configure(text='Dealer\'s Hand Total:' +
                            f'{bj.cardSum(bj.dealer_hand)}')
     player_title.configure(text='Your Hand Total:' +
                            f'{bj.cardSum(bj.player_hand)}')
-    start_button.configure(state=NORMAL, text='Continue', command=playerBetGet)
+    start_button.configure(state=NORMAL, text='Cont', command=playerBetGet)
     total_money.configure(text=f'Total money: ${bj.player_money}')
     player_entry_instruction.configure(text='Enter a bet amount')
     player_entry.configure(state=NORMAL, text='')
@@ -396,10 +478,10 @@ quit_button = Button(top_frame, text='Quit', state=NORMAL, command=closeWindow)
 player_entry_instruction = Label(top_frame, text='Press start to begin')
 player_entry = Entry(top_frame, state=DISABLED)
 hit_button = Button(top_frame, text='Hit', state=DISABLED,
-                    command=hit)
-special_case_button = Button(top_frame, text='Spesh1', state=DISABLED)
-special_case_button2 = Button(top_frame, text='Spesh2', state=DISABLED)
-special_case_button3 = Button(top_frame, text ='Spesh3', state=DISABLED)
+                    command= lambda: hit(bj.player_hand))
+special_case_button = Button(top_frame, text='     ', state=DISABLED)
+special_case_button2 = Button(top_frame, text='     ', state=DISABLED)
+special_case_button3 = Button(top_frame, text ='     ', state=DISABLED)
 stand_button = Button(top_frame, text='Stand', state=DISABLED, command=stand)
 
 total_money.grid(row=0, column=1, columnspan=3)
